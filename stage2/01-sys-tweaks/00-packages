@@ -25,7 +25,6 @@ policykit-1
 ssh-import-id
 rng-tools
 ethtool
-vl805fw
 ntfs-3g
 pciutils
 rpi-eeprom
@@ -34,3 +33,6 @@ ntp
 pigpiod pigpio
 openjdk-11-jdk-headless
 libtbb2
+udisks2
+unzip zip p7zip-full
+file
