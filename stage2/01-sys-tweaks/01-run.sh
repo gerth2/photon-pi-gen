@@ -11,6 +11,15 @@ install -m 644 files/console-setup   	"${ROOTFS_DIR}/etc/default/"
 
 install -m 755 files/rc.local		"${ROOTFS_DIR}/etc/"
 
+mkdir -p "${ROOTFS_DIR}/opt/photonvision"
+curl -sk "https://api.github.com/repos/photonvision/photonvision/releases/latest" | 
+    grep "browser_download_url.*jar" | 
+    cut -d : -f 2,3 | 
+    tr -d '"' | 
+    wget -qi - -O "${ROOTFS_DIR}/opt/photonvision/photonvision.jar"
+install -m 644 files/photonvision.service "${ROOTFS_DIR}/lib/systemd/system/"
+
+
 if [ -n "${PUBKEY_SSH_FIRST_USER}" ]; then
 	install -v -m 0700 -o 1000 -g 1000 -d "${ROOTFS_DIR}"/home/"${FIRST_USER_NAME}"/.ssh
 	echo "${PUBKEY_SSH_FIRST_USER}" >"${ROOTFS_DIR}"/home/"${FIRST_USER_NAME}"/.ssh/authorized_keys
@@ -32,6 +41,8 @@ if [ "${ENABLE_SSH}" == "1" ]; then
 else
 	systemctl disable ssh
 fi
+systemctl enable pigpiod
+systemctl enable photonvision
 systemctl enable regenerate_ssh_host_keys
 EOF
 
